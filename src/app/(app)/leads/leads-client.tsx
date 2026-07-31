@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { demoLeads, type LeadStatus } from "@/lib/demo-data";
@@ -44,7 +44,7 @@ export default function LeadsClient() {
               onClick={() => setStatus(f.key)}
               className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
                 status === f.key
-                  ? "bg-ink text-white"
+                  ? "bg-accent text-white"
                   : "bg-paper text-muted hover:bg-line/60"
               }`}
             >

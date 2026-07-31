@@ -37,7 +37,7 @@ function ConversationList({
             onClick={() => setFilter(f.key)}
             className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
               filter === f.key
-                ? "bg-ink text-white"
+                ? "bg-accent text-white"
                 : "bg-paper text-muted hover:bg-line/60"
             }`}
           >
@@ -51,7 +51,7 @@ function ConversationList({
             <button
               onClick={() => onSelect(c.id)}
               className={`flex w-full items-start gap-3 px-4 py-3.5 text-left transition-colors ${
-                active === c.id ? "bg-copper-tint/60" : "hover:bg-paper"
+                active === c.id ? "bg-accent-tint/60" : "hover:bg-paper"
               }`}
             >
               <ChannelBadge channel={c.channel} />
@@ -66,7 +66,7 @@ function ConversationList({
                   {c.preview}
                 </p>
               </div>
-              {c.unread && <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-copper" />}
+              {c.unread && <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-accent" />}
             </button>
           </li>
         ))}
@@ -86,7 +86,7 @@ function CallCard({ call }: { call: NonNullable<Conversation["call"]> }) {
       {/* fake recording player, becomes the real Vapi recording once connected */}
       <div className="flex items-center gap-3 rounded-xl border border-line bg-surface p-3.5">
         <button
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ink text-white transition-colors hover:bg-ink-soft"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-voice text-white transition-colors hover:opacity-90"
           aria-label="Play recording"
         >
           <PlayIcon className="ml-0.5 h-3.5 w-3.5" />
@@ -96,7 +96,7 @@ function CallCard({ call }: { call: NonNullable<Conversation["call"]> }) {
             (h, i) => (
               <span
                 key={i}
-                className={`w-1 rounded-full ${i < 9 ? "bg-copper" : "bg-line-strong"}`}
+                className={`w-1 rounded-full ${i < 9 ? "bg-voice" : "bg-line-strong"}`}
                 style={{ height: `${h * 2}px` }}
               />
             ),
@@ -107,7 +107,7 @@ function CallCard({ call }: { call: NonNullable<Conversation["call"]> }) {
 
       {/* AI generated call summary */}
       <div className="rounded-xl border border-line bg-surface p-4">
-        <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-copper-deep">
+        <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-accent-deep">
           <SparkIcon className="h-3.5 w-3.5" />
           AI summary
         </p>
@@ -150,14 +150,14 @@ function ConversationView({ convo, onBack }: { convo: Conversation; onBack: () =
               <div
                 className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed sm:max-w-[70%] ${
                   m.from === "ai"
-                    ? "rounded-br-md bg-ink text-zinc-100"
+                    ? "rounded-br-md bg-accent text-white"
                     : "rounded-bl-md border border-line bg-surface"
                 }`}
               >
                 <p>{m.text}</p>
                 <p
                   className={`mt-1 text-[11px] tabular-nums ${
-                    m.from === "ai" ? "text-zinc-500" : "text-faint"
+                    m.from === "ai" ? "text-white/65" : "text-faint"
                   }`}
                 >
                   {m.from === "ai" ? "AI agent · " : ""}

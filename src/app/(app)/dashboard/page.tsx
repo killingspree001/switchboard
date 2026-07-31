@@ -20,7 +20,7 @@ export default function DashboardPage() {
       >
         <Link
           href="/campaigns"
-          className="inline-flex items-center gap-2 rounded-lg bg-copper px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-copper-deep"
+          className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-deep"
         >
           <PhoneOutIcon className="h-4 w-4" />
           New campaign
@@ -49,7 +49,7 @@ export default function DashboardPage() {
             <h2 className="font-display text-base font-semibold">Latest activity</h2>
             <Link
               href="/inbox"
-              className="inline-flex items-center gap-1 text-sm font-medium text-copper-deep hover:underline"
+              className="inline-flex items-center gap-1 text-sm font-medium text-accent-deep hover:underline"
             >
               Open inbox <ArrowRightIcon className="h-3.5 w-3.5" />
             </Link>
@@ -89,7 +89,7 @@ export default function DashboardPage() {
                     <span
                       className={`shrink-0 text-[11px] font-semibold uppercase tracking-wider ${
                         cp.status === "running"
-                          ? "text-copper-deep"
+                          ? "text-accent-deep"
                           : cp.status === "done"
                             ? "text-closed"
                             : "text-faint"
@@ -100,7 +100,7 @@ export default function DashboardPage() {
                   </div>
                   <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-paper">
                     <div
-                      className="h-full rounded-full bg-copper"
+                      className="h-full rounded-full bg-accent"
                       style={{ width: `${pct}%` }}
                     />
                   </div>
@@ -115,16 +115,16 @@ export default function DashboardPage() {
       </div>
 
       {/* how it works strip */}
-      <section className="mt-6 rounded-xl border border-line bg-ink p-5 sm:p-6">
+      <section className="mt-6 rounded-xl bg-accent p-5 sm:p-6">
         <div className="flex items-start gap-3">
-          <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-copper/20 text-copper">
+          <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/15 text-white">
             <SparkIcon className="h-4.5 w-4.5" />
           </span>
           <div>
             <h2 className="font-display text-base font-semibold text-white">
               Every channel, one pipeline
             </h2>
-            <p className="mt-1 max-w-2xl text-sm leading-relaxed text-zinc-400">
+            <p className="mt-1 max-w-2xl text-sm leading-relaxed text-white/75">
               Outbound AI calls, an always on receptionist, and instant WhatsApp and
               Instagram replies all feed the same inbox, so your team only ever works
               from one list of leads.

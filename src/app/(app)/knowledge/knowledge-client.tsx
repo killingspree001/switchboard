@@ -33,7 +33,7 @@ export default function KnowledgeClient() {
         <header className="flex items-center justify-between border-b border-line px-5 py-4">
           <div>
             <h2 className="flex items-center gap-2 font-display text-base font-semibold">
-              <SparkIcon className="h-4.5 w-4.5 text-copper-deep" />
+              <SparkIcon className="h-4.5 w-4.5 text-accent-deep" />
               Agent instructions
             </h2>
             <p className="mt-0.5 text-sm text-muted">
@@ -50,7 +50,7 @@ export default function KnowledgeClient() {
             }}
             rows={14}
             spellCheck={false}
-            className="w-full resize-y rounded-lg border border-line bg-paper p-4 font-mono text-[13px] leading-relaxed outline-none transition-colors focus:border-copper"
+            className="w-full resize-y rounded-lg border border-line bg-paper p-4 font-mono text-[13px] leading-relaxed outline-none transition-colors focus:border-accent"
           />
           <div className="mt-3 flex items-center justify-between gap-3">
             <p className="text-xs text-faint">
@@ -58,7 +58,7 @@ export default function KnowledgeClient() {
             </p>
             <button
               onClick={() => setSaved(true)}
-              className="rounded-lg bg-ink px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-ink-soft"
+              className="rounded-lg bg-accent px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-deep"
             >
               {saved ? "Saved ✓" : "Save instructions"}
             </button>
@@ -71,7 +71,7 @@ export default function KnowledgeClient() {
         <header className="flex items-center justify-between border-b border-line px-5 py-4">
           <div>
             <h2 className="flex items-center gap-2 font-display text-base font-semibold">
-              <BookIcon className="h-4.5 w-4.5 text-copper-deep" />
+              <BookIcon className="h-4.5 w-4.5 text-accent-deep" />
               Business documents
             </h2>
             <p className="mt-0.5 text-sm text-muted">
@@ -82,7 +82,7 @@ export default function KnowledgeClient() {
         </header>
 
         <div className="p-5">
-          <button className="flex w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-line-strong bg-paper px-4 py-7 text-center transition-colors hover:border-copper/60">
+          <button className="flex w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-line-strong bg-paper px-4 py-7 text-center transition-colors hover:border-accent/60">
             <UploadIcon className="h-5 w-5 text-faint" />
             <span className="mt-2 text-sm font-medium">Upload PDF or text</span>
             <span className="mt-0.5 text-xs text-muted">

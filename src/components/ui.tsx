@@ -6,7 +6,7 @@ export function ChannelBadge({ channel, size = "md" }: { channel: Channel; size?
   const box = size === "sm" ? "h-7 w-7" : "h-9 w-9";
   const icon = size === "sm" ? "h-3.5 w-3.5" : "h-4.5 w-4.5";
   const styles: Record<Channel, string> = {
-    voice: "bg-copper-tint text-copper-deep",
+    voice: "bg-voice-tint text-voice",
     whatsapp: "bg-whatsapp-tint text-whatsapp",
     instagram: "bg-instagram-tint text-instagram",
   };

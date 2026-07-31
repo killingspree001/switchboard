@@ -65,11 +65,11 @@ export default function CampaignsClient() {
             onClick={() => fileInput.current?.click()}
             className={`flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-6 py-10 text-center transition-colors ${
               dragging
-                ? "border-copper bg-copper-tint/50"
-                : "border-line-strong bg-paper hover:border-copper/60"
+                ? "border-accent bg-accent-tint/50"
+                : "border-line-strong bg-paper hover:border-accent/60"
             }`}
           >
-            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-copper-tint text-copper-deep">
+            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-accent-tint text-accent-deep">
               <UploadIcon className="h-5 w-5" />
             </span>
             <p className="mt-3 text-sm font-medium">
@@ -122,7 +122,7 @@ export default function CampaignsClient() {
           <button
             disabled={rows.length === 0}
             title="Goes live once the Vapi key is connected"
-            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-copper px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-copper-deep disabled:cursor-not-allowed disabled:bg-line disabled:text-faint sm:w-auto"
+            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-accent-deep disabled:cursor-not-allowed disabled:bg-line disabled:text-faint sm:w-auto"
           >
             <PhoneOutIcon className="h-4 w-4" />
             Start calling {rows.length > 0 ? `${rows.length} leads` : ""}
@@ -150,7 +150,7 @@ export default function CampaignsClient() {
                   <span className="shrink-0 text-xs text-faint">{cp.createdAt}</span>
                 </div>
                 <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-paper">
-                  <div className="h-full rounded-full bg-copper" style={{ width: `${pct}%` }} />
+                  <div className="h-full rounded-full bg-accent" style={{ width: `${pct}%` }} />
                 </div>
                 <div className="mt-1.5 flex items-center justify-between text-xs">
                   <span className="tabular-nums text-muted">
@@ -159,7 +159,7 @@ export default function CampaignsClient() {
                   <span
                     className={`font-semibold uppercase tracking-wider ${
                       cp.status === "running"
-                        ? "text-copper-deep"
+                        ? "text-accent-deep"
                         : cp.status === "done"
                           ? "text-closed"
                           : "text-faint"

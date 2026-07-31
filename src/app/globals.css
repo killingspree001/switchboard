@@ -1,25 +1,24 @@
 @import "tailwindcss";
 
 /* Switchboard design tokens
-   light porcelain workspace, ink sidebar, copper accent
-   each channel gets its own color so the inbox scans at a glance */
+   all light workspace, white top nav, iris violet accent
+   each channel keeps its own color so the inbox scans at a glance */
 :root {
-  --paper: #f4f4f2;
+  --paper: #f7f7f8;
   --surface: #ffffff;
-  --ink: #16181d;
-  --ink-soft: #22252c;
-  --ink-line: #2e323b;
-  --text: #1d2025;
-  --text-muted: #6e7480;
-  --text-faint: #9aa0ab;
-  --line: #e6e6e2;
-  --line-strong: #d8d8d3;
+  --text: #1b1c20;
+  --text-muted: #6d7078;
+  --text-faint: #9c9fa7;
+  --line: #e8e8ea;
+  --line-strong: #d9d9dd;
 
-  --copper: #c2591d;
-  --copper-deep: #a84a15;
-  --copper-tint: #faeee6;
+  --accent: #6d28d9;
+  --accent-deep: #5b21b6;
+  --accent-tint: #f3eefc;
+  --accent-soft: #e6dcf8;
 
-  --voice: #c2591d;
+  --voice: #2563eb;
+  --voice-tint: #e9f0fd;
   --whatsapp: #1a9e55;
   --whatsapp-tint: #e9f7ef;
   --instagram: #c13584;
@@ -38,20 +37,19 @@
 @theme inline {
   --color-paper: var(--paper);
   --color-surface: var(--surface);
-  --color-ink: var(--ink);
-  --color-ink-soft: var(--ink-soft);
-  --color-ink-line: var(--ink-line);
   --color-text: var(--text);
   --color-muted: var(--text-muted);
   --color-faint: var(--text-faint);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
 
-  --color-copper: var(--copper);
-  --color-copper-deep: var(--copper-deep);
-  --color-copper-tint: var(--copper-tint);
+  --color-accent: var(--accent);
+  --color-accent-deep: var(--accent-deep);
+  --color-accent-tint: var(--accent-tint);
+  --color-accent-soft: var(--accent-soft);
 
   --color-voice: var(--voice);
+  --color-voice-tint: var(--voice-tint);
   --color-whatsapp: var(--whatsapp);
   --color-whatsapp-tint: var(--whatsapp-tint);
   --color-instagram: var(--instagram);
@@ -66,7 +64,7 @@
   --color-closed: var(--closed);
   --color-closed-tint: var(--closed-tint);
 
-  --font-display: var(--font-space-grotesk);
+  --font-display: var(--font-bricolage);
   --font-sans: var(--font-inter);
 }
 
@@ -78,7 +76,7 @@ body {
 }
 
 ::selection {
-  background: var(--copper);
+  background: var(--accent);
   color: #fff;
 }
 
