@@ -277,7 +277,7 @@ export default function LandingPage() {
           </div>
           <Link
             href="/dashboard"
-            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#5b21b6] transition-opacity hover:opacity-90"
+            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#1440b8] transition-opacity hover:opacity-90"
           >
             Open the demo
             <ArrowRightIcon className="h-4 w-4" />
