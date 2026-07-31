@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.join(__dirname),
   },
+  // keeps the floating dev button out of product screenshots
+  devIndicators: false,
 };
 
 export default nextConfig;
