@@ -59,13 +59,19 @@ export default function LandingPage() {
           AI that works your phone line, WhatsApp and Instagram, then files
           every lead into one inbox.
         </p>
-        <div className="mt-8">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <Link
-            href="/dashboard"
+            href="/try"
             className="inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-deep"
           >
-            See it live
+            Try it in real time
             <ArrowRightIcon className="h-4 w-4" />
+          </Link>
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center gap-2 rounded-lg border border-line-strong px-6 py-3 text-sm font-semibold text-text transition-colors hover:border-accent hover:text-accent"
+          >
+            Open the demo
           </Link>
         </div>
 
@@ -209,15 +215,23 @@ export default function LandingPage() {
           The demo is already running.
         </h2>
         <p className="mx-auto mt-3 max-w-md text-muted">
-          Sample conversations, live screens, no signup. Poke around.
+          Chat with the real agent, or poke around the dashboard. No signup.
         </p>
-        <Link
-          href="/dashboard"
-          className="mt-7 inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-deep"
-        >
-          Open the demo
-          <ArrowRightIcon className="h-4 w-4" />
-        </Link>
+        <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+          <Link
+            href="/try"
+            className="inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-deep"
+          >
+            Try it in real time
+            <ArrowRightIcon className="h-4 w-4" />
+          </Link>
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center gap-2 rounded-lg border border-line-strong px-6 py-3 text-sm font-semibold text-text transition-colors hover:border-accent hover:text-accent"
+          >
+            Open the demo
+          </Link>
+        </div>
       </section>
 
       {/* footer with the oversized wordmark */}
