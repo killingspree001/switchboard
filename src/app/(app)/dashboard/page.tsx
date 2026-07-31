@@ -1,16 +1,58 @@
+"use client";
+
 import Link from "next/link";
-import { demoStats, demoConversations, demoCampaigns } from "@/lib/demo-data";
+import {
+  demoStats,
+  demoConversations,
+  demoCampaigns,
+  demoLeads,
+  type Conversation,
+  type Campaign,
+  type Lead,
+} from "@/lib/demo-data";
+import { useLiveCollection } from "@/lib/use-live-data";
 import { PageHeader, ChannelBadge, DemoTag } from "@/components/ui";
 import { PhoneOutIcon, ArrowRightIcon, SparkIcon } from "@/components/icons";
 
-const stats = [
-  { label: "Calls today", value: demoStats.callsToday, hint: "outbound + inbound" },
-  { label: "Connect rate", value: `${demoStats.connectedRate}%`, hint: "of dialed calls" },
-  { label: "Messages handled", value: demoStats.messagesHandled, hint: "WhatsApp + Instagram" },
-  { label: "Hot leads", value: demoStats.hotLeads, hint: "waiting on you" },
-];
-
 export default function DashboardPage() {
+  const { data: conversations, live } = useLiveCollection<Conversation>(
+    "conversations",
+    demoConversations,
+  );
+  const { data: campaigns } = useLiveCollection<Campaign>("campaigns", demoCampaigns);
+  const { data: leads } = useLiveCollection<Lead>("leads", demoLeads);
+
+  // once the data is live these numbers come from the actual records
+  const stats = live
+    ? [
+        {
+          label: "Conversations",
+          value: conversations.length,
+          hint: "across all channels",
+        },
+        {
+          label: "Calls logged",
+          value: conversations.filter((c) => c.channel === "voice").length,
+          hint: "outbound + inbound",
+        },
+        {
+          label: "Chats handled",
+          value: conversations.filter((c) => c.channel !== "voice").length,
+          hint: "WhatsApp + Instagram",
+        },
+        {
+          label: "Hot leads",
+          value: leads.filter((l) => l.status === "hot").length,
+          hint: "waiting on you",
+        },
+      ]
+    : [
+        { label: "Calls today", value: demoStats.callsToday, hint: "outbound + inbound" },
+        { label: "Connect rate", value: `${demoStats.connectedRate}%`, hint: "of dialed calls" },
+        { label: "Messages handled", value: demoStats.messagesHandled, hint: "WhatsApp + Instagram" },
+        { label: "Hot leads", value: demoStats.hotLeads, hint: "waiting on you" },
+      ];
+
   return (
     <>
       <PageHeader
@@ -55,7 +97,7 @@ export default function DashboardPage() {
             </Link>
           </header>
           <ul className="divide-y divide-line">
-            {demoConversations.slice(0, 4).map((c) => (
+            {conversations.slice(0, 4).map((c) => (
               <li key={c.id}>
                 <Link
                   href="/inbox"
@@ -80,7 +122,7 @@ export default function DashboardPage() {
             <DemoTag />
           </header>
           <ul className="divide-y divide-line">
-            {demoCampaigns.map((cp) => {
+            {campaigns.map((cp) => {
               const pct = cp.total ? Math.round((cp.called / cp.total) * 100) : 0;
               return (
                 <li key={cp.id} className="px-5 py-4">

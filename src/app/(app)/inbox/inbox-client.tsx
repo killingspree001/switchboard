@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { demoConversations, type Channel, type Conversation } from "@/lib/demo-data";
+import { useLiveCollection } from "@/lib/use-live-data";
 import { ChannelBadge, DemoTag } from "@/components/ui";
 import { PlayIcon, SparkIcon, ArrowRightIcon } from "@/components/icons";
 
@@ -13,11 +14,13 @@ const filters: { key: Channel | "all"; label: string }[] = [
 ];
 
 function ConversationList({
+  conversations,
   active,
   onSelect,
   filter,
   setFilter,
 }: {
+  conversations: Conversation[];
   active: string | null;
   onSelect: (id: string) => void;
   filter: Channel | "all";
@@ -25,8 +28,8 @@ function ConversationList({
 }) {
   const list =
     filter === "all"
-      ? demoConversations
-      : demoConversations.filter((c) => c.channel === filter);
+      ? conversations
+      : conversations.filter((c) => c.channel === filter);
 
   return (
     <div className="flex h-full flex-col">
@@ -189,18 +192,24 @@ function ConversationView({ convo, onBack }: { convo: Conversation; onBack: () =
 }
 
 export default function InboxClient() {
+  const { data: conversations } = useLiveCollection<Conversation>(
+    "conversations",
+    demoConversations,
+  );
   const [filter, setFilter] = useState<Channel | "all">("all");
-  const [activeId, setActiveId] = useState<string | null>(demoConversations[0].id);
+  const [activeId, setActiveId] = useState<string | null>(null);
   // on mobile only one pane shows at a time, this tracks which
   const [mobileDetail, setMobileDetail] = useState(false);
 
-  const active = demoConversations.find((c) => c.id === activeId) ?? null;
+  const active =
+    conversations.find((c) => c.id === activeId) ?? conversations[0] ?? null;
 
   return (
     <div className="grid h-[calc(100dvh-10.5rem)] min-h-[480px] overflow-hidden rounded-xl border border-line bg-surface lg:h-[calc(100dvh-11rem)] lg:grid-cols-[360px_1fr]">
       <div className={`${mobileDetail ? "hidden" : "flex"} min-h-0 flex-col lg:flex lg:border-r lg:border-line`}>
         <ConversationList
-          active={activeId}
+          conversations={conversations}
+          active={active?.id ?? null}
           filter={filter}
           setFilter={setFilter}
           onSelect={(id) => {

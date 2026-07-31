@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { demoCampaigns } from "@/lib/demo-data";
+import { demoCampaigns, type Campaign } from "@/lib/demo-data";
+import { useLiveCollection } from "@/lib/use-live-data";
 import { DemoTag } from "@/components/ui";
 import { UploadIcon, PhoneOutIcon } from "@/components/icons";
 
@@ -26,6 +27,7 @@ function parseCsv(text: string): ParsedRow[] {
 }
 
 export default function CampaignsClient() {
+  const { data: campaigns } = useLiveCollection<Campaign>("campaigns", demoCampaigns);
   const fileInput = useRef<HTMLInputElement>(null);
   const [rows, setRows] = useState<ParsedRow[]>([]);
   const [fileName, setFileName] = useState<string | null>(null);
@@ -141,7 +143,7 @@ export default function CampaignsClient() {
           <DemoTag />
         </header>
         <ul className="divide-y divide-line">
-          {demoCampaigns.map((cp) => {
+          {campaigns.map((cp) => {
             const pct = cp.total ? Math.round((cp.called / cp.total) * 100) : 0;
             return (
               <li key={cp.id} className="px-5 py-4">

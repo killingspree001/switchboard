@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { doc, getDoc } from "firebase/firestore";
+import { getDb } from "@/lib/firebase";
 
 // This route is the real reply pipeline. With GEMINI_API_KEY set it answers
 // with live AI; without one it falls back to simulated replies so the try
@@ -17,6 +19,26 @@ demo. Stay on the topic of Switchboard and what it can do for their business.`;
 interface ChatMessage {
   role: "user" | "ai";
   text: string;
+}
+
+// the admin's saved instructions from the knowledge base, cached for a minute
+let cachedPrompt: { text: string; at: number } | null = null;
+
+async function agentPrompt(): Promise<string> {
+  const db = getDb();
+  if (!db) return SYSTEM_PROMPT;
+  if (cachedPrompt && Date.now() - cachedPrompt.at < 60_000) return cachedPrompt.text;
+  try {
+    const snap = await getDoc(doc(db, "settings", "agent"));
+    const stored = snap.data()?.prompt;
+    if (typeof stored === "string" && stored.trim()) {
+      cachedPrompt = { text: stored, at: Date.now() };
+      return stored;
+    }
+  } catch {
+    // fall through to the built in prompt
+  }
+  return SYSTEM_PROMPT;
 }
 
 // keyword based fallbacks used only when no API key is configured
@@ -56,7 +78,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ reply: simulatedReply(lastUser.text), live: false });
   }
 
-  const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+  const model = process.env.GEMINI_MODEL || "gemini-flash-latest";
   try {
     const res = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
@@ -64,7 +86,7 @@ export async function POST(req: Request) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          system_instruction: { parts: [{ text: await agentPrompt() }] },
           contents: messages.map((m) => ({
             role: m.role === "ai" ? "model" : "user",
             parts: [{ text: m.text }],

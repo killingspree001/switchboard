@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { getDb } from "@/lib/firebase";
 import { DemoTag } from "@/components/ui";
 import { BookIcon, SparkIcon, UploadIcon } from "@/components/icons";
 
@@ -25,6 +27,38 @@ const demoDocs = [
 export default function KnowledgeClient() {
   const [prompt, setPrompt] = useState(starterPrompt);
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [synced, setSynced] = useState(false);
+
+  // pull the saved instructions from Firestore when it's connected
+  useEffect(() => {
+    const db = getDb();
+    if (!db) return;
+    getDoc(doc(db, "settings", "agent"))
+      .then((snap) => {
+        const stored = snap.data()?.prompt;
+        if (typeof stored === "string" && stored.trim()) setPrompt(stored);
+        setSynced(true);
+      })
+      .catch(() => {});
+  }, []);
+
+  async function save() {
+    const db = getDb();
+    if (!db) {
+      setSaved(true);
+      return;
+    }
+    setSaving(true);
+    try {
+      await setDoc(doc(db, "settings", "agent"), { prompt }, { merge: true });
+      setSaved(true);
+    } catch {
+      // keep the button re-clickable if the write fails
+    } finally {
+      setSaving(false);
+    }
+  }
 
   return (
     <div className="grid gap-6 lg:grid-cols-5">
@@ -54,13 +88,16 @@ export default function KnowledgeClient() {
           />
           <div className="mt-3 flex items-center justify-between gap-3">
             <p className="text-xs text-faint">
-              Saved locally for now, syncs to the live agent once Supabase is connected.
+              {synced
+                ? "Synced with Firestore — the live chat agent reads this."
+                : "Saved locally for now, syncs once Firebase is connected."}
             </p>
             <button
-              onClick={() => setSaved(true)}
-              className="rounded-lg bg-accent px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-deep"
+              onClick={save}
+              disabled={saving}
+              className="rounded-lg bg-accent px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-deep disabled:opacity-60"
             >
-              {saved ? "Saved ✓" : "Save instructions"}
+              {saving ? "Saving..." : saved ? "Saved ✓" : "Save instructions"}
             </button>
           </div>
         </div>

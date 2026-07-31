@@ -1,7 +1,8 @@
 ﻿"use client";
 
 import { useState } from "react";
-import { demoLeads, type LeadStatus } from "@/lib/demo-data";
+import { demoLeads, type Lead, type LeadStatus } from "@/lib/demo-data";
+import { useLiveCollection } from "@/lib/use-live-data";
 import { ChannelBadge, StatusPill } from "@/components/ui";
 import { SearchIcon } from "@/components/icons";
 
@@ -14,10 +15,11 @@ const statusFilters: { key: LeadStatus | "all"; label: string }[] = [
 ];
 
 export default function LeadsClient() {
+  const { data: allLeads } = useLiveCollection<Lead>("leads", demoLeads);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<LeadStatus | "all">("all");
 
-  const leads = demoLeads.filter((l) => {
+  const leads = allLeads.filter((l) => {
     const matchesText =
       l.name.toLowerCase().includes(query.toLowerCase()) || l.phone.includes(query);
     const matchesStatus = status === "all" || l.status === status;
