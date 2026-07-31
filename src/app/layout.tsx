@@ -26,8 +26,19 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-theme="dark"
+      suppressHydrationWarning
       className={`${bricolage.variable} ${inter.variable} h-full antialiased`}
     >
+      <head>
+        {/* apply the saved theme before paint so there is no flash, dark by default */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{var t=localStorage.getItem('theme');if(t==='light')document.documentElement.dataset.theme='light'}catch(e){}",
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

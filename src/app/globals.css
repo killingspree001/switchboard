@@ -32,6 +32,46 @@
   --cold-tint: #eef0f3;
   --closed: #1f8a5b;
   --closed-tint: #e8f5ee;
+
+  --demo-border: #fcd34d;
+  --demo-bg: #fffbeb;
+  --demo-text: #d97706;
+}
+
+/* dark theme, the default. light kicks in when the toggle sets data-theme */
+:root[data-theme="dark"] {
+  --paper: #121215;
+  --surface: #1a1a1e;
+  --text: #ececef;
+  --text-muted: #9b9ea6;
+  --text-faint: #6b6e76;
+  --line: #26262b;
+  --line-strong: #36363c;
+
+  --accent: #8b5cf6;
+  --accent-deep: #a78bfa;
+  --accent-tint: #241d38;
+  --accent-soft: #3a2f5e;
+
+  --voice: #60a5fa;
+  --voice-tint: #1a2740;
+  --whatsapp: #34c274;
+  --whatsapp-tint: #14291c;
+  --instagram: #e26aa8;
+  --instagram-tint: #331f2a;
+
+  --hot: #ef6a5c;
+  --hot-tint: #3a1f1c;
+  --warm: #eaa63c;
+  --warm-tint: #362a14;
+  --cold: #9aa3b2;
+  --cold-tint: #24272c;
+  --closed: #3fbf85;
+  --closed-tint: #142e22;
+
+  --demo-border: #544314;
+  --demo-bg: #251f0e;
+  --demo-text: #eab308;
 }
 
 @theme inline {
@@ -63,6 +103,10 @@
   --color-cold-tint: var(--cold-tint);
   --color-closed: var(--closed);
   --color-closed-tint: var(--closed-tint);
+
+  --color-demo-border: var(--demo-border);
+  --color-demo-bg: var(--demo-bg);
+  --color-demo-text: var(--demo-text);
 
   --font-display: var(--font-bricolage);
   --font-sans: var(--font-inter);

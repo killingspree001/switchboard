@@ -39,7 +39,7 @@ export function StatusPill({ status }: { status: LeadStatus }) {
 // small amber tag marking anything powered by sample data
 export function DemoTag() {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-amber-600">
+    <span className="inline-flex items-center gap-1 rounded-full border border-demo-border bg-demo-bg px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-demo-text">
       Demo
     </span>
   );

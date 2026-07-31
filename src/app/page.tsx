@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/app-shell";
+import ThemeToggle from "@/components/theme-toggle";
 import {
   PhoneIcon,
   ChatIcon,
@@ -73,13 +74,16 @@ export default function LandingPage() {
             <a href="#features" className="hover:text-text">Features</a>
             <a href="#how" className="hover:text-text">How it works</a>
           </nav>
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent-deep"
-          >
-            Open the demo
-            <ArrowRightIcon className="h-3.5 w-3.5" />
-          </Link>
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent-deep"
+            >
+              Open the demo
+              <ArrowRightIcon className="h-3.5 w-3.5" />
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -273,7 +277,7 @@ export default function LandingPage() {
           </div>
           <Link
             href="/dashboard"
-            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-accent-deep transition-opacity hover:opacity-90"
+            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#5b21b6] transition-opacity hover:opacity-90"
           >
             Open the demo
             <ArrowRightIcon className="h-4 w-4" />

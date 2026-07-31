@@ -9,6 +9,7 @@ import {
   MegaphoneIcon,
   BookIcon,
 } from "./icons";
+import ThemeToggle from "./theme-toggle";
 
 const nav = [
   { href: "/dashboard", label: "Overview", icon: GridIcon },
@@ -72,10 +73,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           </nav>
 
           <div className="flex items-center gap-3">
-            <span className="hidden items-center gap-1.5 rounded-full border border-amber-300 bg-amber-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-amber-600 sm:inline-flex">
-              <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+            <span className="hidden items-center gap-1.5 rounded-full border border-demo-border bg-demo-bg px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-demo-text sm:inline-flex">
+              <span className="h-1.5 w-1.5 rounded-full bg-demo-text" />
               Demo
             </span>
+            <ThemeToggle />
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent-soft font-display text-xs font-bold text-accent-deep">
               AD
             </span>
