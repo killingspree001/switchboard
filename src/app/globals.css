@@ -1,26 +1,89 @@
 @import "tailwindcss";
 
+/* Switchboard design tokens
+   light porcelain workspace, ink sidebar, copper accent
+   each channel gets its own color so the inbox scans at a glance */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper: #f4f4f2;
+  --surface: #ffffff;
+  --ink: #16181d;
+  --ink-soft: #22252c;
+  --ink-line: #2e323b;
+  --text: #1d2025;
+  --text-muted: #6e7480;
+  --text-faint: #9aa0ab;
+  --line: #e6e6e2;
+  --line-strong: #d8d8d3;
+
+  --copper: #c2591d;
+  --copper-deep: #a84a15;
+  --copper-tint: #faeee6;
+
+  --voice: #c2591d;
+  --whatsapp: #1a9e55;
+  --whatsapp-tint: #e9f7ef;
+  --instagram: #c13584;
+  --instagram-tint: #faecf4;
+
+  --hot: #d33d2e;
+  --hot-tint: #fbecea;
+  --warm: #d98b0b;
+  --warm-tint: #fcf3e2;
+  --cold: #7b8494;
+  --cold-tint: #eef0f3;
+  --closed: #1f8a5b;
+  --closed-tint: #e8f5ee;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-line: var(--ink-line);
+  --color-text: var(--text);
+  --color-muted: var(--text-muted);
+  --color-faint: var(--text-faint);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-copper: var(--copper);
+  --color-copper-deep: var(--copper-deep);
+  --color-copper-tint: var(--copper-tint);
+
+  --color-voice: var(--voice);
+  --color-whatsapp: var(--whatsapp);
+  --color-whatsapp-tint: var(--whatsapp-tint);
+  --color-instagram: var(--instagram);
+  --color-instagram-tint: var(--instagram-tint);
+
+  --color-hot: var(--hot);
+  --color-hot-tint: var(--hot-tint);
+  --color-warm: var(--warm);
+  --color-warm-tint: var(--warm-tint);
+  --color-cold: var(--cold);
+  --color-cold-tint: var(--cold-tint);
+  --color-closed: var(--closed);
+  --color-closed-tint: var(--closed-tint);
+
+  --font-display: var(--font-space-grotesk);
+  --font-sans: var(--font-inter);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--text);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--copper);
+  color: #fff;
+}
+
+/* slim scrollbars so the inbox panes feel tidy */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
 }
