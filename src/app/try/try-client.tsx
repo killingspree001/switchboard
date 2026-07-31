@@ -15,7 +15,93 @@ const starters = [
   "What will it cost me?",
 ];
 
-export default function TryClient() {
+function CallMeCard({
+  voiceEnabled,
+  voiceNumber,
+}: {
+  voiceEnabled: boolean;
+  voiceNumber: string | null;
+}) {
+  const [phone, setPhone] = useState("");
+  const [state, setState] = useState<"idle" | "calling" | "done" | "error">("idle");
+  const [error, setError] = useState("");
+
+  async function requestCall() {
+    setState("calling");
+    setError("");
+    try {
+      const res = await fetch("/api/call-me", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error ?? "call failed");
+        setState("error");
+        return;
+      }
+      setState("done");
+    } catch {
+      setError("connection hiccup, try again");
+      setState("error");
+    }
+  }
+
+  return (
+    <section className="rounded-xl border border-line bg-surface p-5">
+      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-voice-tint text-voice">
+        <PhoneIcon className="h-5 w-5" />
+      </span>
+      <h2 className="mt-4 font-display text-lg font-semibold">
+        Get a real call from the AI
+      </h2>
+      <p className="mt-2 text-sm leading-relaxed text-muted">
+        Drop your number and the voice agent calls you within a minute, talks
+        like a person, and a summary of your own call lands in the inbox.
+      </p>
+      {state === "done" ? (
+        <div className="mt-4 rounded-lg bg-closed-tint p-3.5 text-sm text-closed">
+          Calling you now — pick up! Check the inbox afterwards for your call
+          summary.
+        </div>
+      ) : (
+        <>
+          <input
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            disabled={!voiceEnabled || state === "calling"}
+            placeholder="+234 803 000 0000"
+            className="mt-4 w-full rounded-lg border border-line bg-paper px-3.5 py-2.5 text-sm outline-none transition-colors focus:border-voice placeholder:text-faint"
+          />
+          <button
+            onClick={requestCall}
+            disabled={!voiceEnabled || !phone.trim() || state === "calling"}
+            className="mt-3 w-full rounded-lg bg-voice px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:bg-line disabled:text-faint"
+          >
+            {state === "calling" ? "Dialing..." : "Call me"}
+          </button>
+          {state === "error" && <p className="mt-2 text-xs text-hot">{error}</p>}
+        </>
+      )}
+      <p className="mt-3 text-xs leading-relaxed text-faint">
+        {voiceEnabled
+          ? voiceNumber
+            ? `Use international format with country code. Or call the AI yourself: ${voiceNumber}`
+            : "Use international format with country code."
+          : "This unlocks in the voice phase — it goes live the moment the Vapi key is connected."}
+      </p>
+    </section>
+  );
+}
+
+export default function TryClient({
+  voiceEnabled,
+  voiceNumber,
+}: {
+  voiceEnabled: boolean;
+  voiceNumber: string | null;
+}) {
   const [messages, setMessages] = useState<Msg[]>([
     {
       role: "ai",
@@ -154,33 +240,7 @@ export default function TryClient() {
       </section>
 
       {/* the real call card */}
-      <section className="rounded-xl border border-line bg-surface p-5">
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-voice-tint text-voice">
-          <PhoneIcon className="h-5 w-5" />
-        </span>
-        <h2 className="mt-4 font-display text-lg font-semibold">
-          Get a real call from the AI
-        </h2>
-        <p className="mt-2 text-sm leading-relaxed text-muted">
-          Drop your number and the voice agent calls you within a minute, talks
-          like a person, and a summary of your own call appears in the inbox.
-        </p>
-        <input
-          disabled
-          placeholder="+1 555 000 0000"
-          className="mt-4 w-full rounded-lg border border-line bg-paper px-3.5 py-2.5 text-sm outline-none placeholder:text-faint"
-        />
-        <button
-          disabled
-          className="mt-3 w-full rounded-lg bg-line px-4 py-2.5 text-sm font-medium text-faint"
-        >
-          Call me
-        </button>
-        <p className="mt-3 text-xs leading-relaxed text-faint">
-          This unlocks in the voice phase — it goes live the moment the Vapi
-          key is connected. The chat on the left uses the exact same brain.
-        </p>
-      </section>
+      <CallMeCard voiceEnabled={voiceEnabled} voiceNumber={voiceNumber} />
     </div>
   );
 }

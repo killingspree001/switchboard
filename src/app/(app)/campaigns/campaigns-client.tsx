@@ -32,11 +32,45 @@ export default function CampaignsClient() {
   const [rows, setRows] = useState<ParsedRow[]>([]);
   const [fileName, setFileName] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
+  const [launching, setLaunching] = useState(false);
+  const [result, setResult] = useState<string | null>(null);
 
   async function handleFile(file: File) {
     const text = await file.text();
     setRows(parseCsv(text));
     setFileName(file.name);
+    setResult(null);
+  }
+
+  async function launch() {
+    setLaunching(true);
+    setResult(null);
+    try {
+      const res = await fetch("/api/campaigns/launch", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: fileName?.replace(/\.csv$/i, "") || "New campaign",
+          rows,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setResult(`Could not start: ${data.error ?? "something went wrong"}`);
+      } else {
+        setResult(
+          `Calling started — ${data.placed} call${data.placed === 1 ? "" : "s"} placed${
+            data.capped ? ` (capped at ${data.capped} per launch to protect trial credit)` : ""
+          }. Results land in the inbox as calls finish.`,
+        );
+        setRows([]);
+        setFileName(null);
+      }
+    } catch {
+      setResult("Could not start: connection hiccup, try again.");
+    } finally {
+      setLaunching(false);
+    }
   }
 
   return (
@@ -122,16 +156,29 @@ export default function CampaignsClient() {
           )}
 
           <button
-            disabled={rows.length === 0}
-            title="Goes live once the Vapi key is connected"
+            onClick={launch}
+            disabled={rows.length === 0 || launching}
             className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-accent-deep disabled:cursor-not-allowed disabled:bg-line disabled:text-faint sm:w-auto"
           >
             <PhoneOutIcon className="h-4 w-4" />
-            Start calling {rows.length > 0 ? `${rows.length} leads` : ""}
+            {launching
+              ? "Starting calls..."
+              : `Start calling ${rows.length > 0 ? `${rows.length} leads` : ""}`}
           </button>
+          {result && (
+            <p
+              className={`mt-3 rounded-lg p-3 text-sm ${
+                result.startsWith("Could not")
+                  ? "bg-hot-tint text-hot"
+                  : "bg-closed-tint text-closed"
+              }`}
+            >
+              {result}
+            </p>
+          )}
           <p className="mt-2 text-xs text-faint">
-            Calling starts for real once the Vapi key is added. Until then this screen
-            just previews your list.
+            Phone numbers must include the country code, like +234 803 000 0000.
+            Launches are capped at 5 calls while on trial credit.
           </p>
         </div>
       </section>

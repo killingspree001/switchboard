@@ -9,6 +9,12 @@ export const metadata = {
 };
 
 export default function TryPage() {
+  const voiceEnabled = Boolean(
+    process.env.VAPI_API_KEY &&
+      process.env.VAPI_ASSISTANT_ID &&
+      process.env.VAPI_PHONE_NUMBER_ID,
+  );
+  const voiceNumber = process.env.VAPI_PHONE_NUMBER ?? null;
   return (
     <div className="flex-1 bg-paper">
       <header className="sticky top-0 z-30 border-b border-line bg-paper/90 backdrop-blur">
@@ -36,7 +42,7 @@ export default function TryPage() {
             This is the actual agent, not a video. Talk to it.
           </p>
         </div>
-        <TryClient />
+        <TryClient voiceEnabled={voiceEnabled} voiceNumber={voiceNumber} />
       </main>
     </div>
   );
