@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Switchboard
 
-## Getting Started
+One inbox for every conversation your business has. Switchboard runs AI voice
+calls, answers WhatsApp automatically, and files everything into a single
+dashboard with leads tagged by how warm they are.
 
-First, run the development server:
+**Live demo:** https://switchboard-lemon.vercel.app
+
+## What it does
+
+- **AI voice calls, both ways** — upload a CSV of leads and the AI calls each
+  one with a natural voice. Inbound calls get answered 24/7. Every call comes
+  back with a recording, transcript and an AI written summary.
+- **WhatsApp on autopilot** — incoming messages get instant AI replies based on
+  the business knowledge base. Full threads land in the inbox.
+- **Unified inbox** — voice, WhatsApp and Instagram in one stream, with a lead
+  table (hot lead, follow up, not interested, closed) fed automatically.
+- **Knowledge base** — paste your pricing and FAQs once, every channel answers
+  from the same playbook. Saved instructions update the live agent immediately.
+- **Try it live** — a public page where anyone can chat with the actual agent
+  or get a real phone call from it.
+
+## Stack
+
+- Next.js (App Router) + TypeScript + Tailwind
+- Firebase Firestore for data, realtime listeners on every screen
+- Vapi for voice calls and telephony
+- Gemini for chat replies and summaries
+- Meta WhatsApp Cloud API for messaging
+- Deployed on Vercel
+
+## Running it
 
 ```bash
+npm install
+cp .env.example .env.local   # fill in what you have
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app runs fine with no keys at all — every screen falls back to labeled
+demo data. Add keys as you get them:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Key | Unlocks |
+| --- | --- |
+| `GEMINI_API_KEY` | live AI chat replies |
+| `NEXT_PUBLIC_FIREBASE_*` | real database behind every screen |
+| `VAPI_*` | outbound campaigns, inbound line, call me button |
+| `WHATSAPP_*` | WhatsApp auto replies |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Seed the database once Firebase is connected:
 
-## Learn More
+```bash
+curl -X POST http://localhost:3000/api/seed
+```
 
-To learn more about Next.js, take a look at the following resources:
+## How the pieces talk
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+CSV upload ──▶ /api/campaigns/launch ──▶ Vapi ──▶ phone call
+                                                      │
+WhatsApp message ──▶ /api/whatsapp/webhook            ▼
+                        │                    /api/vapi/webhook
+                        ▼                             │
+                shared AI brain (lib/ai.ts) ──▶ Firestore ──▶ inbox UI
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+One reply pipeline serves every channel, so the agent behaves the same
+everywhere and the knowledge base only needs updating once.
