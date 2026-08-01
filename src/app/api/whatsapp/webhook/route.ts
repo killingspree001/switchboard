@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { getDb } from "@/lib/firebase";
+import { adminDb } from "@/lib/firebase-admin";
 import { aiReply, type ChatTurn } from "@/lib/ai";
 
 // Meta WhatsApp Cloud API webhook. GET is Meta's one-time verification
@@ -61,15 +60,15 @@ export async function POST(req: Request) {
   const from = msg.from;
   const name = value?.contacts?.[0]?.profile?.name || `+${from}`;
   const text = msg.text.body;
-  const db = getDb();
+  const db = adminDb();
   const convoId = `wa_${from}`;
   const now = new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
 
   // pull the thread so far so the AI has context
   let history: ChatTurn[] = [];
   if (db) {
-    const snap = await getDoc(doc(db, "conversations", convoId)).catch(() => null);
-    const existing = snap?.exists() ? snap.data() : null;
+    const snap = await db.collection("conversations").doc(convoId).get().catch(() => null);
+    const existing = snap?.exists ? snap.data() : null;
     if (existing?.messages) {
       history = existing.messages.map((m: { from: string; text: string }) => ({
         role: m.from === "ai" ? ("ai" as const) : ("user" as const),
@@ -92,7 +91,7 @@ export async function POST(req: Request) {
       })),
       { id: `m${history.length}`, from: "ai", text: reply, time: now },
     ];
-    await setDoc(doc(db, "conversations", convoId), {
+    await db.collection("conversations").doc(convoId).set({
       leadName: name,
       channel: "whatsapp",
       preview: text.slice(0, 80),
@@ -102,8 +101,7 @@ export async function POST(req: Request) {
       sort: -Date.now(),
       demo: false,
     });
-    await setDoc(
-      doc(db, "leads", `lead_${from}`),
+    await db.collection("leads").doc(`lead_${from}`).set(
       {
         name,
         phone: `+${from}`,

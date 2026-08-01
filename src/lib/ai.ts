@@ -1,5 +1,4 @@
-import { doc, getDoc } from "firebase/firestore";
-import { getDb } from "./firebase";
+import { adminDb } from "./firebase-admin";
 
 // One reply brain for every channel: the try page chat, WhatsApp, and
 // anything added later all call aiReply so they behave the same.
@@ -22,11 +21,11 @@ export interface ChatTurn {
 let cachedPrompt: { text: string; at: number } | null = null;
 
 async function agentPrompt(): Promise<string> {
-  const db = getDb();
+  const db = adminDb();
   if (!db) return DEFAULT_PROMPT;
   if (cachedPrompt && Date.now() - cachedPrompt.at < 60_000) return cachedPrompt.text;
   try {
-    const snap = await getDoc(doc(db, "settings", "agent"));
+    const snap = await db.collection("settings").doc("agent").get();
     const stored = snap.data()?.prompt;
     if (typeof stored === "string" && stored.trim()) {
       cachedPrompt = { text: stored, at: Date.now() };

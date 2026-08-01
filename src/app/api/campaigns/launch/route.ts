@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { collection, doc, setDoc } from "firebase/firestore";
-import { getDb } from "@/lib/firebase";
+import { adminDb } from "@/lib/firebase-admin";
 import { normalizePhone, startOutboundCall, vapiConfigured } from "@/lib/vapi";
 
 // takes the parsed CSV rows and starts real AI calls, capped so a stray
@@ -40,7 +39,7 @@ export async function POST(req: Request) {
   }
 
   const toCall = callable.slice(0, MAX_CALLS_PER_LAUNCH);
-  const db = getDb();
+  const db = adminDb();
   const campaignId = `cp_${Date.now()}`;
 
   let placed = 0;
@@ -54,7 +53,7 @@ export async function POST(req: Request) {
       });
       placed++;
       if (db) {
-        await setDoc(doc(collection(db, "calls"), call.id), {
+        await db.collection("calls").doc(call.id).set({
           campaignId,
           leadName: row.name,
           phone: row.phone,
@@ -69,7 +68,7 @@ export async function POST(req: Request) {
   }
 
   if (db) {
-    await setDoc(doc(db, "campaigns", campaignId), {
+    await db.collection("campaigns").doc(campaignId).set({
       name,
       total: callable.length,
       called: placed,

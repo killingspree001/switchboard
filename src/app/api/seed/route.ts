@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { doc, setDoc } from "firebase/firestore";
-import { getDb } from "@/lib/firebase";
+import { adminDb } from "@/lib/firebase-admin";
 import { demoConversations, demoLeads, demoCampaigns } from "@/lib/demo-data";
 
 // Fills Firestore with the labeled demo rows so the dashboard has data on
@@ -25,9 +24,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "not allowed" }, { status: 403 });
   }
 
-  const db = getDb();
+  const db = adminDb();
   if (!db) {
-    return NextResponse.json({ error: "firebase is not configured" }, { status: 400 });
+    return NextResponse.json({ error: "firebase admin is not configured" }, { status: 400 });
   }
 
   try {
@@ -35,21 +34,21 @@ export async function POST(req: Request) {
 
     for (const [i, c] of demoConversations.entries()) {
       const { id, ...rest } = c;
-      await setDoc(doc(db, "conversations", id), { ...rest, sort: i, demo: true });
+      await db.collection("conversations").doc(id).set({ ...rest, sort: i, demo: true });
       written++;
     }
     for (const [i, l] of demoLeads.entries()) {
       const { id, ...rest } = l;
-      await setDoc(doc(db, "leads", id), { ...rest, sort: i, demo: true });
+      await db.collection("leads").doc(id).set({ ...rest, sort: i, demo: true });
       written++;
     }
     for (const [i, cp] of demoCampaigns.entries()) {
       const { id, ...rest } = cp;
-      await setDoc(doc(db, "campaigns", id), { ...rest, sort: i, demo: true });
+      await db.collection("campaigns").doc(id).set({ ...rest, sort: i, demo: true });
       written++;
     }
 
-    await setDoc(doc(db, "settings", "agent"), { prompt: STARTER_PROMPT }, { merge: true });
+    await db.collection("settings").doc("agent").set({ prompt: STARTER_PROMPT }, { merge: true });
     written++;
 
     return NextResponse.json({ ok: true, written });

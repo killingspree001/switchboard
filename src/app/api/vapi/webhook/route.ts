@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { doc, getDoc, setDoc, updateDoc, increment } from "firebase/firestore";
-import { getDb } from "@/lib/firebase";
+import { FieldValue } from "firebase-admin/firestore";
+import { adminDb } from "@/lib/firebase-admin";
 
 // Vapi posts call events here. On end-of-call-report we file the whole
 // conversation (summary, transcript, recording) into the inbox and lead list.
@@ -12,12 +12,11 @@ interface TranscriptTurn {
 }
 
 export async function POST(req: Request) {
-  let message: Record<string, unknown> & {
+  let message: {
     type?: string;
     call?: { id?: string; customer?: { number?: string; name?: string } };
     artifact?: { messages?: TranscriptTurn[]; recordingUrl?: string };
     analysis?: { summary?: string };
-    endedReason?: string;
     durationSeconds?: number;
   };
   try {
@@ -28,11 +27,10 @@ export async function POST(req: Request) {
   }
 
   if (message.type !== "end-of-call-report") {
-    // acknowledge everything else quietly
     return NextResponse.json({ ok: true });
   }
 
-  const db = getDb();
+  const db = adminDb();
   if (!db) return NextResponse.json({ ok: true });
 
   const callId = message.call?.id ?? `call_${Date.now()}`;
@@ -47,12 +45,12 @@ export async function POST(req: Request) {
   const duration = `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 
   // anything we started from a campaign has extra context stored on the call
-  const callRef = doc(db, "calls", callId);
-  const callSnap = await getDoc(callRef).catch(() => null);
-  const callMeta = callSnap?.exists() ? callSnap.data() : null;
+  const callRef = db.collection("calls").doc(callId);
+  const callSnap = await callRef.get().catch(() => null);
+  const callMeta = callSnap?.exists ? callSnap.data() : null;
   const leadName = callMeta?.leadName || customer?.name || customer?.number || "Unknown caller";
 
-  await setDoc(doc(db, "conversations", callId), {
+  await db.collection("conversations").doc(callId).set({
     leadName,
     channel: "voice",
     preview: `AI call summary: ${summary.slice(0, 80)}`,
@@ -75,8 +73,7 @@ export async function POST(req: Request) {
     demo: false,
   });
 
-  await setDoc(
-    doc(db, "leads", `lead_${(customer?.number ?? callId).replace(/\D/g, "")}`),
+  await db.collection("leads").doc(`lead_${(customer?.number ?? callId).replace(/\D/g, "")}`).set(
     {
       name: leadName,
       phone: customer?.number ?? "",
@@ -91,10 +88,12 @@ export async function POST(req: Request) {
   );
 
   if (callMeta?.campaignId) {
-    await updateDoc(doc(db, "campaigns", callMeta.campaignId), {
-      connected: increment(1),
-    }).catch(() => {});
-    await updateDoc(callRef, { status: "completed" }).catch(() => {});
+    await db
+      .collection("campaigns")
+      .doc(callMeta.campaignId)
+      .update({ connected: FieldValue.increment(1) })
+      .catch(() => {});
+    await callRef.update({ status: "completed" }).catch(() => {});
   }
 
   return NextResponse.json({ ok: true });

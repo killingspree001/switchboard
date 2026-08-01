@@ -1,5 +1,6 @@
 import { initializeApp, getApps, type FirebaseApp } from "firebase/app";
 import { getFirestore, type Firestore } from "firebase/firestore";
+import { getAuth, type Auth } from "firebase/auth";
 
 // Firebase only spins up when the env config is present, so the app
 // still runs as a pure demo without any keys.
@@ -25,4 +26,10 @@ export function getDb(): Firestore | null {
     firestore = getFirestore(app);
   }
   return firestore;
+}
+
+export function getFirebaseAuth(): Auth | null {
+  if (!firebaseConfigured) return null;
+  getDb();
+  return app ? getAuth(app) : null;
 }
